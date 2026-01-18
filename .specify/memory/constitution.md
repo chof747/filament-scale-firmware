@@ -1,12 +1,12 @@
 <!--
 Sync Impact Report
-- Version change: 0.2.0 -> 0.3.0
-- Modified principles:
-  - Arduino + PlatformIO First -> Arduino + PlatformIO First (expanded for config constants)
+- Version change: 0.3.0 -> 0.4.0
+- Modified principles: None
 - Added sections: None
 - Removed sections: None
+- Added guidance: Retrofit workflow (Development Workflow)
 - Templates requiring updates:
-  - .specify/templates/plan-template.md ✅ updated
+  - .specify/templates/plan-template.md ✅ updated (no change required)
   - .specify/templates/spec-template.md ✅ updated (no change required)
   - .specify/templates/tasks-template.md ✅ updated (no change required)
   - .specify/templates/commands/*.md ⚠ pending (directory missing)
@@ -77,6 +77,14 @@ Rationale: Encapsulation keeps hardware interactions consistent and maintainable
 - When touching hardware pin mappings or timing, update documentation or inline
   rationale comments.
 - Keep changes scoped; avoid multi-feature refactors unless required.
+- Retrofit workflow for existing features MUST follow:
+  - Write or update the feature spec first.
+  - Cross-check spec vs code; resolve each mismatch by choosing to keep code or
+    change code, and record the decision in a `Clarifications` section.
+  - Update the spec to match code when keeping behavior; implement only the
+    explicitly agreed changes.
+  - Generate only the necessary feature docs (plan, research, data model,
+    contracts note, quickstart, tasks) focused on the agreed changes.
 
 ## Governance
 
@@ -88,4 +96,4 @@ Rationale: Encapsulation keeps hardware interactions consistent and maintainable
   principles/sections, PATCH for clarifications.
 - Reviews MUST verify compliance with the Core Principles and constraints.
 
-**Version**: 0.3.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-17
+**Version**: 0.4.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-17
