@@ -46,9 +46,9 @@ void logError(const char* msg) {
 void metricFloat(const char* measurement, const char* sensor, float value, const char* unit) {
   Serial.print(F("{\"type\":\"metric\",\"ts_ms\":"));
   Serial.print(millis());
-  Serial.print(F("\",\"sensor\":\""));
+  Serial.print(F(",\"sensor\":\""));
   Serial.print(sensor);
-  Serial.print(F(",\"measurement\":\""));
+  Serial.print(F("\",\"measurement\":\""));
   Serial.print(measurement);
   Serial.print(F("\",\"value\":"));
   Serial.print(value, 6);
