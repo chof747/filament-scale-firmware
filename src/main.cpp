@@ -76,9 +76,17 @@ void updateWeightDisplayAndMetric() {
   }
   static float lastReportedWeightG = 0.0f;
   static bool hasLastWeight = false;
-  if (!hasLastWeight || fabsf(weightG - lastReportedWeightG) >= WEIGHT_STEP_G) {
+  static int lastScale = -1;
+  static bool forceDisplay = true;
+  int currentScale = filamentScale.getCurrentScale();
+  if (currentScale != lastScale) {
+    lastScale = currentScale;
+    forceDisplay = true;
+  }
+  if (forceDisplay || !hasLastWeight || fabsf(weightG - lastReportedWeightG) >= WEIGHT_STEP_G) {
     lastReportedWeightG = weightG;
     hasLastWeight = true;
+    forceDisplay = false;
     metricFloat("weight", ("s_" + String(filamentScale.getCurrentScale())).c_str(), weightG, "g");
     displayWeight(weightG);
   }
