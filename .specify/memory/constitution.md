@@ -1,10 +1,10 @@
 <!--
 Sync Impact Report
-- Version change: 0.1.0 -> 0.2.0
-- Modified principles: None
+- Version change: 0.2.0 -> 0.3.0
+- Modified principles:
+  - Arduino + PlatformIO First -> Arduino + PlatformIO First (expanded for config constants)
 - Added sections: None
 - Removed sections: None
-- Added principles: Object-Oriented Firmware Structure
 - Templates requiring updates:
   - .specify/templates/plan-template.md ✅ updated
   - .specify/templates/spec-template.md ✅ updated (no change required)
@@ -42,7 +42,8 @@ Rationale: Resource spikes cause instability and resets on constrained MCUs.
 ### Arduino + PlatformIO First
 The firmware MUST use Arduino framework conventions and PlatformIO build
 configuration. Keep hardware-facing code in `src/` and shared headers in
-`include/`. Avoid OS-specific dependencies and non-embedded abstractions.
+`include/`. Compile-time constants MUST live in `include/config.h`. Avoid
+OS-specific dependencies and non-embedded abstractions.
 
 Rationale: Consistent platform usage keeps builds predictable and portable.
 
@@ -87,4 +88,4 @@ Rationale: Encapsulation keeps hardware interactions consistent and maintainable
   principles/sections, PATCH for clarifications.
 - Reviews MUST verify compliance with the Core Principles and constraints.
 
-**Version**: 0.2.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-17
+**Version**: 0.3.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-17

@@ -85,7 +85,10 @@ bool FilamentScale::setScaleWeightGrams(int index, float desiredWeightG) {
   if (index < 0 || index >= MAX_SCALES) {
     return false;
   }
-  if (desiredWeightG < 0.0f) {
+  if (desiredWeightG < MIN_KNOWN_WEIGHT_G) {
+    return false;
+  }
+  if (desiredWeightG > MAX_KNOWN_WEIGHT_G) {
     return false;
   }
   if (!waitForScaleReady(index, logWarn, "not ready to set weight within timeout.")) {

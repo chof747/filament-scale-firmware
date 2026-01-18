@@ -19,6 +19,9 @@
 #define WEIGHT_STEP_G 1.0f
 #define SERIAL_CMD_MAX_LEN 64
 
+const float MIN_KNOWN_WEIGHT_G = 0.0f;
+const float MAX_KNOWN_WEIGHT_G = 2500.0f;
+
 extern const float calibrationFactors[MAX_SCALES];
 extern const int doutPins[MAX_SCALES];
 
