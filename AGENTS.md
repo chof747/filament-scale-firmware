@@ -3,6 +3,7 @@
 Auto-generated from all feature plans. Last updated: 2026-01-18
 
 ## Active Technologies
+- C++ (Arduino framework) + Arduino core, Adafruit SSD1306, Adafruit GFX (002-ui-interaction)
 
 - C++ (Arduino framework) + Arduino core, HX711 library (001-scale-sensing)
 
@@ -22,6 +23,7 @@ tests/
 C++ (Arduino framework): Follow standard conventions
 
 ## Recent Changes
+- 002-ui-interaction: Added C++ (Arduino framework) + Arduino core, Adafruit SSD1306, Adafruit GFX
 
 - 001-scale-sensing: Added C++ (Arduino framework) + Arduino core, HX711 library
 
