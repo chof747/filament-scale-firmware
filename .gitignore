@@ -44,3 +44,7 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+
+.codex/
+.codex/history.jsonl
+.codex/sessions/2026/01/17/rollout-2026-01-17T09-22-43-019bcb0c-aa65-70b3-a9e5-08ab039c2a59.jsonl
