@@ -36,6 +36,7 @@
 - Arduino Nano limits: avoid dynamic allocation after setup and `String`.
 - Arduino + PlatformIO first: keep Arduino conventions and PlatformIO config.
 - Simple validation: no TDD requirement; tests optional and lightweight.
+- Object-oriented firmware: hardware behavior encapsulated in classes.
 
 ## Project Structure
 

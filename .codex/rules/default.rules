@@ -1,0 +1,1 @@
+prefix_rule(pattern=["git", "add", ".specify/memory/constitution.md", ".specify/templates/plan-template.md", ".specify/templates/spec-template.md", ".specify/templates/tasks-template.md"], decision="allow")

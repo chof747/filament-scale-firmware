@@ -1,18 +1,14 @@
 <!--
 Sync Impact Report
-- Version change: N/A -> 0.1.0
-- Modified principles:
-  - Principle 1 -> Clean, Readable Firmware
-  - Principle 2 -> Deterministic Control Flow
-  - Principle 3 -> Arduino Nano Resource Limits
-  - Principle 4 -> Arduino + PlatformIO First
-  - Principle 5 -> Simple Validation, No TDD
-- Added sections: Hardware & Performance Constraints, Development Workflow
+- Version change: 0.1.0 -> 0.2.0
+- Modified principles: None
+- Added sections: None
 - Removed sections: None
+- Added principles: Object-Oriented Firmware Structure
 - Templates requiring updates:
   - .specify/templates/plan-template.md ✅ updated
-  - .specify/templates/spec-template.md ✅ updated
-  - .specify/templates/tasks-template.md ✅ updated
+  - .specify/templates/spec-template.md ✅ updated (no change required)
+  - .specify/templates/tasks-template.md ✅ updated (no change required)
   - .specify/templates/commands/*.md ⚠ pending (directory missing)
 - Follow-up TODOs: None
 -->
@@ -58,6 +54,13 @@ checks that can run within PlatformIO when beneficial.
 Rationale: The firmware is small and hardware-bound, so pragmatic validation
 is sufficient.
 
+### Object-Oriented Firmware Structure
+Firmware MUST use classes to encapsulate hardware behavior and state, and keep
+object responsibilities clear. Procedural code is acceptable only for glue
+logic around object boundaries.
+
+Rationale: Encapsulation keeps hardware interactions consistent and maintainable.
+
 ## Hardware & Performance Constraints
 
 - Target platform is Arduino Nano; design for low memory usage and fast loop
@@ -84,4 +87,4 @@ is sufficient.
   principles/sections, PATCH for clarifications.
 - Reviews MUST verify compliance with the Core Principles and constraints.
 
-**Version**: 0.1.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-17
+**Version**: 0.2.0 | **Ratified**: 2026-01-17 | **Last Amended**: 2026-01-17
