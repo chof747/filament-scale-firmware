@@ -30,7 +30,7 @@ output on scale changes and show a weight within 1 second of startup.
 
 - Clean, readable firmware: short functions, clear names, no dead code.
 - Deterministic control flow: non-blocking loop, explicit timing/state machine.
-- Arduino Nano limits: avoid dynamic allocation after setup and `String`.
+- Arduino Nano limits: avoid dynamic allocation after setup and `String`; prefer fixed-size buffers.
 - Arduino + PlatformIO first: keep Arduino conventions, PlatformIO config, and
   compile-time constants in `include/config.h`.
 - Simple validation: no TDD requirement; tests optional and lightweight.

@@ -1,6 +1,7 @@
 #include "scale.h"
 
 #include <Arduino.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -28,7 +29,9 @@ bool FilamentScale::waitForScaleReady(int index, void (*logFn)(const char*), con
   unsigned long startMillis = millis();
   while (!scale_[index].is_ready()) {
     if (millis() - startMillis > TIMEOUT_MS) {
-      logFn((String("Scale ") + String(index) + " " + timeoutMsg).c_str());
+      char message[80];
+      snprintf(message, sizeof(message), "Scale %d %s", index, timeoutMsg);
+      logFn(message);
       return false;
     }
     delay(10);
@@ -45,7 +48,9 @@ void FilamentScale::setupScale(int index, int doutPin) {
 
   scale_[index].set_scale(calibration_factor_[index]);
   scale_[index].tare(); //Reset the scale to 0
-  logInfo(("Scale " + String(index) + " setup complete.").c_str());
+  char message[48];
+  snprintf(message, sizeof(message), "Scale %d setup complete.", index);
+  logInfo(message);
 }
 
 int FilamentScale::getCurrentScale() const {
@@ -130,7 +135,9 @@ void FilamentScale::tareCurrentScale() {
   }
 
   scale_[currentScale_].tare();
-  logInfo(("Tared scale " + String(currentScale_)).c_str());
+  char message[32];
+  snprintf(message, sizeof(message), "Tared scale %d", currentScale_);
+  logInfo(message);
 }
 
 bool FilamentScale::readCurrentWeightGrams(float* outWeightG) {
@@ -160,6 +167,9 @@ bool FilamentScale::setScaleWeightGrams(int index, float desiredWeightG) {
   float desiredWeightKg = desiredWeightG / 1000.0f;
   long newOffset = raw - static_cast<long>(desiredWeightKg * scaleFactor);
   scale_[index].set_offset(newOffset);
-  logInfo(("Set scale " + String(index) + " to " + String(desiredWeightG, 0) + " g").c_str());
+  int weightRounded = static_cast<int>(lroundf(desiredWeightG));
+  char message[64];
+  snprintf(message, sizeof(message), "Set scale %d to %d g", index, weightRounded);
+  logInfo(message);
   return true;
 }

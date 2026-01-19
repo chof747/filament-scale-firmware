@@ -39,6 +39,12 @@ static lookup data in `PROGMEM` where appropriate.
 
 Rationale: Resource spikes cause instability and resets on constrained MCUs.
 
+### String-Free Formatting
+Firmware MUST avoid Arduino `String` usage in runtime code; use fixed-size
+character buffers for display and log formatting instead.
+
+Rationale: `String` pulls in heap usage and extra flash on AVR targets.
+
 ### Arduino + PlatformIO First
 The firmware MUST use Arduino framework conventions and PlatformIO build
 configuration. Keep hardware-facing code in `src/` and shared headers in

@@ -30,7 +30,7 @@ bound for set-known-weight.
 
 - Clean, readable firmware: short functions, clear names, no dead code.
 - Deterministic control flow: non-blocking loop, explicit timing/state machine.
-- Arduino Nano limits: avoid dynamic allocation after setup and `String`.
+- Arduino Nano limits: avoid dynamic allocation after setup and `String`; prefer fixed-size buffers.
 - Arduino + PlatformIO first: keep Arduino conventions and PlatformIO config.
 - Simple validation: no TDD requirement; tests optional and lightweight.
 - Object-oriented firmware: hardware behavior encapsulated in classes.

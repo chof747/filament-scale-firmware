@@ -9,6 +9,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <math.h>
+#include <stdio.h>
 
 static FilamentScale filamentScale(calibrationFactors, doutPins);
 static EnvironmentalSensor envSensor;
@@ -43,7 +44,8 @@ void displayWeight(float weight) {
   display.clearDisplay();
   display.setTextSize(2);
 
-  String scaleText = "S" + String(filamentScale.getCurrentScale());
+  char scaleText[6];
+  snprintf(scaleText, sizeof(scaleText), "S%d", filamentScale.getCurrentScale());
   int16_t sx1, sy1;
   uint16_t sw, sh;
 
@@ -55,7 +57,9 @@ void displayWeight(float weight) {
 
   display.setTextColor(SSD1306_WHITE);
 
-  String weightText = String(weight, 0) + " g";
+  int weightRounded = static_cast<int>(lroundf(weight));
+  char weightText[12];
+  snprintf(weightText, sizeof(weightText), "%d g", weightRounded);
   int16_t x1, y1;
   uint16_t w, h;
   display.getTextBounds(weightText, 0, 0, &x1, &y1, &w, &h);
@@ -119,7 +123,9 @@ void updateWeightDisplayAndMetric() {
     lastReportedWeightG = weightG;
     hasLastWeight = true;
     forceDisplay = false;
-    metricFloat("weight", ("s_" + String(filamentScale.getCurrentScale())).c_str(), weightG, "g");
+    char sensorLabel[8];
+    snprintf(sensorLabel, sizeof(sensorLabel), "s_%d", filamentScale.getCurrentScale());
+    metricFloat("weight", sensorLabel, weightG, "g");
     displayWeight(weightG);
   }
 }
@@ -173,7 +179,9 @@ void loop() {
       unsigned long pressDuration = now - buttonPressStartMs;
       if (!longPressTriggered && pressDuration < 1000) {
         filamentScale.advanceScale();
-        logInfo(("Switched to scale " + String(filamentScale.getCurrentScale())).c_str());
+        char message[32];
+        snprintf(message, sizeof(message), "Switched to scale %d", filamentScale.getCurrentScale());
+        logInfo(message);
       }
     }
   }
