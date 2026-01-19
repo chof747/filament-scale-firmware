@@ -1,0 +1,65 @@
+openapi: 3.0.3
+info:
+  title: Environmental Metrics Log Contract
+  version: 1.0.0
+  description: >-
+    This contract documents JSON line payloads emitted by firmware metric and
+    log messages. There is no external network API; this schema exists to
+    standardize log parsing for tooling and diagnostics.
+paths: {}
+components:
+  schemas:
+    MetricMessage:
+      type: object
+      required:
+        - type
+        - ts_ms
+        - sensor
+        - measurement
+        - value
+      properties:
+        type:
+          type: string
+          enum: ["metric"]
+          description: Message type identifier.
+        ts_ms:
+          type: integer
+          format: int64
+          description: Timestamp in milliseconds.
+        sensor:
+          type: string
+          description: Sensor identifier, fixed to "env" for this feature.
+        measurement:
+          type: string
+          enum: ["temperature", "humidity"]
+          description: Measurement name.
+        value:
+          type: number
+          nullable: true
+          description: Measurement value, or null when unavailable.
+        unit:
+          type: string
+          description: Optional unit ("C" or "%") when value is present.
+    LogMessage:
+      type: object
+      required:
+        - type
+        - ts_ms
+        - lvl
+        - msg
+      properties:
+        type:
+          type: string
+          enum: ["log"]
+          description: Message type identifier.
+        ts_ms:
+          type: integer
+          format: int64
+          description: Timestamp in milliseconds.
+        lvl:
+          type: string
+          enum: ["INFO", "WARN", "ERROR"]
+          description: Severity level.
+        msg:
+          type: string
+          description: Human-readable log message.

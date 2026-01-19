@@ -37,6 +37,21 @@
 *.out
 *.app
 
+# Build outputs
+build/
+bin/
+obj/
+out/
+
+# Logs and env
+*.log
+.env*
+
+# Editor/OS noise
+.DS_Store
+Thumbs.db
+.idea/
+
 # debug information files
 *.dwo
 .pio
