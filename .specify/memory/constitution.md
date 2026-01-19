@@ -62,6 +62,10 @@ logic around object boundaries.
 
 Rationale: Encapsulation keeps hardware interactions consistent and maintainable.
 
+### Code Style
+Private class members MUST NOT use trailing underscores, and class/struct
+attributes MUST use lower camel case (start with a lowercase letter).
+
 ## Hardware & Performance Constraints
 
 - Target platform is Arduino Nano; design for low memory usage and fast loop

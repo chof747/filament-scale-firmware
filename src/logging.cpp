@@ -59,3 +59,27 @@ void metricFloat(const char* measurement, const char* sensor, float value, const
   }
   Serial.println('}');
 }
+
+void metricNullableFloat(const char* measurement,
+                         const char* sensor,
+                         const float* value,
+                         const char* unit) {
+  Serial.print(F("{\"type\":\"metric\",\"ts_ms\":"));
+  Serial.print(millis());
+  Serial.print(F(",\"sensor\":\""));
+  Serial.print(sensor);
+  Serial.print(F("\",\"measurement\":\""));
+  Serial.print(measurement);
+  Serial.print(F("\",\"value\":"));
+  if (value) {
+    Serial.print(*value, 6);
+    if (unit) {
+      Serial.print(F(",\"unit\":\""));
+      Serial.print(unit);
+      Serial.print('\"');
+    }
+  } else {
+    Serial.print(F("null"));
+  }
+  Serial.println('}');
+}

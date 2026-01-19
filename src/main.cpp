@@ -3,6 +3,7 @@
 #include "config.h"
 #include "commands.h"
 #include "scale.h"
+#include "sht31.h"
 
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -10,6 +11,7 @@
 #include <math.h>
 
 static FilamentScale filamentScale(calibrationFactors, doutPins);
+static EnvironmentalSensor envSensor;
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 unsigned long lastButtonChangeMs = 0;
@@ -66,6 +68,29 @@ void displayWeight(float weight) {
   display.display();
 }
 
+// Display environmental reading (temperature or humidity)
+// =============================================================================================
+void displayEnvReading(const EnvReading& reading, bool isTemperature) {
+  char text[24];
+  if (isTemperature) {
+    filamentScale.formatTemperatureLabel(reading, text, sizeof(text));
+  } else {
+    filamentScale.formatHumidityLabel(reading, text, sizeof(text));
+  }
+
+  display.clearDisplay();
+  display.setTextSize(2);
+  int16_t x1, y1;
+  uint16_t w, h;
+  display.getTextBounds(text, 0, 0, &x1, &y1, &w, &h);
+  int16_t x = 0;
+  if (w < SCREEN_WIDTH) {
+    x = SCREEN_WIDTH - w;
+  }
+  display.setCursor(x, START_Y);
+  display.print(text);
+  display.display();
+}
 
 // Update weight display and emit metric if weight changed sufficiently
 // ============================================================================================
@@ -92,6 +117,23 @@ void updateWeightDisplayAndMetric() {
   }
 }
 
+// Emit periodic environmental metrics and log failures
+// ============================================================================================
+void updateEnvMetrics(unsigned long now) {
+  if (!envSensor.sampleIfDue(now)) {
+    return;
+  }
+  const EnvReading& reading = envSensor.lastReading();
+  if (reading.isValid) {
+    metricNullableFloat("temperature", "env", &reading.temperatureC, "C");
+    metricNullableFloat("humidity", "env", &reading.humidityPercent, "%");
+  } else {
+    metricNullableFloat("temperature", "env", NULL, NULL);
+    metricNullableFloat("humidity", "env", NULL, NULL);
+    logWarn("Env sensor read failed.");
+  }
+}
+
 // Setup function
 //=============================================================================================
 void setup() {
@@ -100,6 +142,9 @@ void setup() {
   setCommandScale(&filamentScale);
 
   filamentScale.setupScales();
+  if (!envSensor.begin()) {
+    logWarn("Env sensor not detected.");
+  }
 
   setupDisplay();
 }
@@ -136,7 +181,15 @@ void loop() {
   static unsigned long lastDisplayMs = 0;
   if (now - lastDisplayMs >= DISPLAY_INTERVAL_MS) {
     lastDisplayMs = now;
-    updateWeightDisplayAndMetric();
+    if (filamentScale.isDisplayingScale()) {
+      updateWeightDisplayAndMetric();
+    } else if (filamentScale.isDisplayingEnvTemp()) {
+      displayEnvReading(envSensor.lastReading(), true);
+    } else if (filamentScale.isDisplayingEnvHum()) {
+      displayEnvReading(envSensor.lastReading(), false);
+    }
   }
+
+  updateEnvMetrics(now);
 }
 //=============================================================================================

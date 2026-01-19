@@ -1,7 +1,10 @@
 #include "scale.h"
 
 #include <Arduino.h>
+#include <stdio.h>
+#include <stdlib.h>
 
+#include "config.h"
 #include "logging.h"
 
 namespace {
@@ -13,7 +16,8 @@ FilamentScale::FilamentScale()
     : FilamentScale(kDefaultCalibrationFactors, kDefaultDoutPins) {}
 
 FilamentScale::FilamentScale(const float* calibrationFactors, const int* doutPins)
-    : currentScale_(0) {
+    : currentScale_(0),
+      displayMode(kDisplayScale) {
   for (int i = 0; i < MAX_SCALES; i++) {
     calibration_factor_[i] = calibrationFactors[i];
     doutPins_[i] = doutPins[i];
@@ -51,11 +55,67 @@ int FilamentScale::getCurrentScale() const {
 void FilamentScale::setCurrentScale(int index) {
   if (index >= 0 && index < MAX_SCALES) {
     currentScale_ = index;
+    displayMode = kDisplayScale;
   }
 }
 
 void FilamentScale::advanceScale() {
-  currentScale_ = (currentScale_ + 1) % MAX_SCALES;
+  if (displayMode == kDisplayScale) {
+    if (currentScale_ < MAX_SCALES - 1) {
+      currentScale_++;
+      return;
+    }
+    displayMode = kDisplayEnvTemp;
+    return;
+  }
+
+  if (displayMode == kDisplayEnvTemp) {
+    displayMode = kDisplayEnvHum;
+    return;
+  }
+
+  displayMode = kDisplayScale;
+  currentScale_ = 0;
+}
+
+FilamentScale::DisplayMode FilamentScale::getDisplayMode() const {
+  return displayMode;
+}
+
+bool FilamentScale::isDisplayingScale() const {
+  return displayMode == kDisplayScale;
+}
+
+bool FilamentScale::isDisplayingEnvTemp() const {
+  return displayMode == kDisplayEnvTemp;
+}
+
+bool FilamentScale::isDisplayingEnvHum() const {
+  return displayMode == kDisplayEnvHum;
+}
+
+void FilamentScale::formatTemperatureLabel(const EnvReading& reading,
+                                           char* out,
+                                           size_t size) const {
+  if (!reading.isValid) {
+    snprintf(out, size, "T: %s", ENV_UNAVAILABLE_TOKEN);
+    return;
+  }
+  char value[10];
+  dtostrf(reading.temperatureC, 0, 1, value);
+  snprintf(out, size, "T: %sC", value);
+}
+
+void FilamentScale::formatHumidityLabel(const EnvReading& reading,
+                                        char* out,
+                                        size_t size) const {
+  if (!reading.isValid) {
+    snprintf(out, size, "H: %s", ENV_UNAVAILABLE_TOKEN);
+    return;
+  }
+  char value[10];
+  dtostrf(reading.humidityPercent, 0, 1, value);
+  snprintf(out, size, "H: %s%%", value);
 }
 
 void FilamentScale::setupScales() {
