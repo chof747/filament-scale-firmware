@@ -68,16 +68,7 @@ void displayWeight(float weight) {
   display.display();
 }
 
-// Display environmental reading (temperature or humidity)
-// =============================================================================================
-void displayEnvReading(const EnvReading& reading, bool isTemperature) {
-  char text[24];
-  if (isTemperature) {
-    filamentScale.formatTemperatureLabel(reading, text, sizeof(text));
-  } else {
-    filamentScale.formatHumidityLabel(reading, text, sizeof(text));
-  }
-
+void displayEnvReadingCommon(const char* text) {
   display.clearDisplay();
   display.setTextSize(2);
   int16_t x1, y1;
@@ -90,6 +81,22 @@ void displayEnvReading(const EnvReading& reading, bool isTemperature) {
   display.setCursor(x, START_Y);
   display.print(text);
   display.display();
+}
+
+// Display environmental reading (temperature)
+// =============================================================================================
+void displayEnvTemperature(const EnvReading& reading) {
+  char text[24];
+  filamentScale.formatTemperatureLabel(reading, text, sizeof(text));
+  displayEnvReadingCommon(text);
+}
+
+// Display environmental reading (humidity)
+// =============================================================================================
+void displayEnvHumidity(const EnvReading& reading) {
+  char text[24];
+  filamentScale.formatHumidityLabel(reading, text, sizeof(text));
+  displayEnvReadingCommon(text);
 }
 
 // Update weight display and emit metric if weight changed sufficiently
@@ -184,9 +191,9 @@ void loop() {
     if (filamentScale.isDisplayingScale()) {
       updateWeightDisplayAndMetric();
     } else if (filamentScale.isDisplayingEnvTemp()) {
-      displayEnvReading(envSensor.lastReading(), true);
+      displayEnvTemperature(envSensor.lastReading());
     } else if (filamentScale.isDisplayingEnvHum()) {
-      displayEnvReading(envSensor.lastReading(), false);
+      displayEnvHumidity(envSensor.lastReading());
     }
   }
 
