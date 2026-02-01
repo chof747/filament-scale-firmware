@@ -4,7 +4,9 @@
 #define MAX_SCALES 3
 #define TIMEOUT_MS 1000
 
-#define CLK 2
+#define CLK0 A2
+#define CLK1 A3
+#define CLK2 2
 #define DOUT1 3
 #define DOUT2 4
 #define DOUT3 5
@@ -32,5 +34,6 @@ const float MAX_KNOWN_WEIGHT_G = 2500.0f;
 
 extern const float calibrationFactors[MAX_SCALES];
 extern const int doutPins[MAX_SCALES];
+extern const int clkPins[MAX_SCALES];
 
 #endif // CONFIG_H

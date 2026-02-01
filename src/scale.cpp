@@ -11,17 +11,21 @@
 namespace {
 const float kDefaultCalibrationFactors[MAX_SCALES] = {411450.0f, 100000.0f, 10000.0f};
 const int kDefaultDoutPins[MAX_SCALES] = {DOUT1, DOUT2, DOUT3};
+const int kDefaultClkPins[MAX_SCALES] = {CLK0, CLK1, CLK2};
 }
 
 FilamentScale::FilamentScale()
-    : FilamentScale(kDefaultCalibrationFactors, kDefaultDoutPins) {}
+    : FilamentScale(kDefaultCalibrationFactors, kDefaultDoutPins, kDefaultClkPins) {}
 
-FilamentScale::FilamentScale(const float* calibrationFactors, const int* doutPins)
+FilamentScale::FilamentScale(const float* calibrationFactors,
+                             const int* doutPins,
+                             const int* clkPins)
     : currentScale_(0),
       displayMode(kDisplayScale) {
   for (int i = 0; i < MAX_SCALES; i++) {
     calibration_factor_[i] = calibrationFactors[i];
     doutPins_[i] = doutPins[i];
+    clkPins_[i] = clkPins[i];
   }
 }
 
@@ -39,8 +43,8 @@ bool FilamentScale::waitForScaleReady(int index, void (*logFn)(const char*), con
   return true;
 }
 
-void FilamentScale::setupScale(int index, int doutPin) {
-  scale_[index].begin(doutPin, CLK);
+void FilamentScale::setupScale(int index, int doutPin, int clkPin) {
+  scale_[index].begin(doutPin, clkPin);
 
   if (!waitForScaleReady(index, logError, "not ready within timeout. Check wiring!")) {
     return;
@@ -125,7 +129,7 @@ void FilamentScale::formatHumidityLabel(const EnvReading& reading,
 
 void FilamentScale::setupScales() {
   for (int i = 0; i < MAX_SCALES; i++) {
-    setupScale(i, doutPins_[i]);
+    setupScale(i, doutPins_[i], clkPins_[i]);
   }
 }
 

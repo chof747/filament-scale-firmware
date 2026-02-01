@@ -11,7 +11,7 @@
 #include <math.h>
 #include <stdio.h>
 
-static FilamentScale filamentScale(calibrationFactors, doutPins);
+static FilamentScale filamentScale(calibrationFactors, doutPins, clkPins);
 static EnvironmentalSensor envSensor;
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);

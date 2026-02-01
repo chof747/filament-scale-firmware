@@ -16,7 +16,7 @@ class FilamentScale {
   };
 
   FilamentScale();
-  FilamentScale(const float* calibrationFactors, const int* doutPins);
+  FilamentScale(const float* calibrationFactors, const int* doutPins, const int* clkPins);
 
   int getCurrentScale() const;
   void setCurrentScale(int index);
@@ -37,10 +37,11 @@ class FilamentScale {
 
  private:
   bool waitForScaleReady(int index, void (*logFn)(const char*), const char* timeoutMsg);
-  void setupScale(int index, int doutPin);
+  void setupScale(int index, int doutPin, int clkPin);
 
   float calibration_factor_[MAX_SCALES];
   int doutPins_[MAX_SCALES];
+  int clkPins_[MAX_SCALES];
   HX711 scale_[MAX_SCALES];
   int currentScale_;
   DisplayMode displayMode;
